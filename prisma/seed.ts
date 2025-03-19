@@ -5,22 +5,22 @@ const prisma = new PrismaClient()
 async function main() {
 
     const alice = await prisma.user.upsert({
-        where: { email: 'alice@prisma.io' },
+        where: { email: 'daniel@gmail.com' },
         update: {},
         create: {
-            name: 'pedro',
-            email: 'pedro@prisma.io',
+            name: 'Daniel Rodriguez',
+            email: 'daniel@gmail.com',
             phone: '3224087129',
             role: 'USER',
             transactions: {
                 create: [
                     {
-                        amount: 1000,
-                        concept: 'Salario',
+                        amount: 6000,
+                        concept: 'Prueba Tecnica',
                         type: 'INGRESO',
                     },
                     {
-                        amount: 200,
+                        amount: 1000,
                         concept: 'Compra de libros',
                         type: 'EGRESO',
                     },
@@ -30,11 +30,11 @@ async function main() {
     })
 
     const bob = await prisma.user.upsert({
-        where: { email: 'bob@prisma.io' },
+        where: { email: 'bob@gmail.com' },
         update: {},
         create: {
-            name: 'Bob',
-            email: 'bob@prisma.io',
+            name: 'Bob Vance',
+            email: 'bob@gmail.com',
             phone: '3224087129',
             role: 'ADMIN',
             transactions: {
@@ -45,7 +45,7 @@ async function main() {
                         type: 'INGRESO',
                     },
                     {
-                        amount: 300,
+                        amount: 1000,
                         concept: 'Pago de internet',
                         type: 'EGRESO',
                     },
@@ -53,8 +53,6 @@ async function main() {
             },
         },
     })
-
-    console.log({ alice, bob })
 }
 
 main()
