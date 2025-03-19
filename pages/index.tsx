@@ -1,37 +1,63 @@
-import { gql, useQuery } from '@apollo/client';
-
-interface Transaction {
-  concept: string;
-  type: 'INGRESO' | 'EGRESO';
-}
+import { gql, useQuery, useMutation } from '@apollo/client';
+import { useState } from 'react';
 
 interface User {
   id: number;
   name: string;
   email: string;
   phone: string | null;
-  role: 'ADMIN' | 'USER';
-  transactions: Transaction[];
 }
 
 const AllUsersQuery = gql`
   query Users {
-    users {
-      id
-      name
-      email
-      phone
-      role
-      transactions {
-        concept
-        type
+      users {
+          id
+          name
+          email
+          phone
       }
-    }
+  }
+`;
+
+const UPDATE_USER_MUTATION = gql`
+  mutation UpdateUser($id: Int!, $name: String, $role: Role) {
+      updateUser(id: $id, name: $name, role: $role) {
+          id
+          name
+          email
+          phone
+      }
   }
 `;
 
 export default function Home() {
-  const { data, error, loading } = useQuery(AllUsersQuery);
+  const { data, error, loading, refetch } = useQuery(AllUsersQuery);
+  const [updateUser] = useMutation(UPDATE_USER_MUTATION);
+  const [editUserId, setEditUserId] = useState<number | null>(null);
+  const [editName, setEditName] = useState<string>('');
+  const [editRole, setEditRole] = useState<'ADMIN' | 'USER' | ''>('');
+
+  const handleEdit = (user: User) => {
+    setEditUserId(user.id);
+    setEditName(user.name);
+    // Aquí podrías obtener el rol actual del usuario si es necesario
+  };
+
+  const handleSave = async (id: number) => {
+    try {
+      await updateUser({
+        variables: {
+          id: id,
+          name: editName,
+          role: editRole,
+        },
+      });
+      setEditUserId(null);
+      refetch();
+    } catch (err) {
+      console.error('Error updating user:', err);
+    }
+  };
 
   if (loading) return <p className="text-slate-600">Loading...</p>;
   if (error) return <p className="text-red-500">Oops, something went wrong: {error.message}</p>;
@@ -44,42 +70,47 @@ export default function Home() {
           <table className="min-w-full divide-y divide-slate-200">
             <thead className="bg-slate-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">ID</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Name</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Email</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Phone</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Role</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Transactions</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-slate-200">
               {data.users.map((user: User) => (
                 <tr key={user.id} className="hover:bg-slate-50">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">{user.id}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">{user.name}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">{user.email}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">{user.phone || 'N/A'}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">{user.role}</td>
-                  <td className="px-6 py-4 text-sm text-slate-900">
-                    {user.transactions && user.transactions.length > 0 ? (
-                      <ul className="space-y-1">
-                        {user.transactions.map((transaction: Transaction, index: number) => (
-                          <li key={index} className="flex items-center space-x-2">
-                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                              transaction.type === 'INGRESO' 
-                                ? 'bg-green-100 text-green-800' 
-                                : 'bg-red-100 text-red-800'
-                            }`}>
-                              {transaction.type}
-                            </span>
-                            <span className="text-slate-600">{transaction.concept}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    ) : (
-                      <span className="text-slate-400">No transactions</span>
-                    )}
-                  </td>
+                  {editUserId === user.id ? (
+                    <>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
+                        <input
+                          type="text"
+                          value={editName}
+                          onChange={(e) => setEditName(e.target.value)}
+                        />
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">{user.email}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">{user.phone || 'N/A'}</td>
+                      <td className="px-6 py-4 text-sm text-slate-900">
+                        <select
+                          value={editRole}
+                          onChange={(e) => setEditRole(e.target.value as 'ADMIN' | 'USER')}
+                        >
+                          <option value="ADMIN">ADMIN</option>
+                          <option value="USER">USER</option>
+                        </select>
+                        <button onClick={() => handleSave(user.id)}>Save</button>
+                      </td>
+                    </>
+                  ) : (
+                    <>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">{user.name}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">{user.email}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">{user.phone || 'N/A'}</td>
+                      <td className="px-6 py-4 text-sm text-slate-900">
+                        <button onClick={() => handleEdit(user)}>Edit</button>
+                      </td>
+                    </>
+                  )}
                 </tr>
               ))}
             </tbody>
