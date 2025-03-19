@@ -1,5 +1,5 @@
 import { enumType, objectType } from "nexus";
-import { User } from "./User"; // Importa User para la relación
+import { User } from "./User";
 
 export const Transaction = objectType({
     name: 'Transaction',
@@ -16,7 +16,7 @@ export const Transaction = objectType({
                     include: { user: true }
                 });
                 if (!transaction?.user) {
-                    throw new Error(`User not found for transaction ${parent.id}`);
+                    throw new Error(`Usuario no encontrado para la transacción: ${parent.id}`);
                 }
                 return transaction.user;
             }
