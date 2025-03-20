@@ -65,55 +65,57 @@ export default function Users() {
         </div>
     );
 
-    if (error) return <p className="text-red-500">Oops, something went wrong: {error.message}</p>;
+    if (error) return <p className="text-red-500">Oops, algo salio mal: {error.message}</p>;
 
     return (
-        <DashboardLayout>
+        <DashboardLayout pageTitle="Sistema de gestión de Ingresos y Gastos">
             <div className="p-4 max-w-7xl mx-auto">
-                <h1 className="text-2xl font-bold mb-6 text-slate-800">Users</h1>
+                <h2 className="text-2xl underline font-bold mb-6 mt-8 text-black">Gestión de Usuarios</h2>
                 {data && data.users && data.users.length > 0 ? (
-                    <div className="rounded-lg border border-slate-200 shadow-sm overflow-hidden">
-                        <table className="min-w-full divide-y divide-slate-200">
-                            <thead className="bg-slate-50">
+                    <div className="rounded-lg shadow-md overflow-hidden">
+                        <table className="min-w-full">
+                            <thead className="bg-zinc-400">
                                 <tr>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Name</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Email</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Phone</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Actions</th>
+                                    <th className="px-6 py-3 text-left text-base font-bold text-black uppercase tracking-wider">Nombre</th>
+                                    <th className="px-6 py-3 text-left text-base font-bold text-black uppercase tracking-wider">Email</th>
+                                    <th className="px-6 py-3 text-left text-base font-bold text-black uppercase tracking-wider">Telefono</th>
+                                    <th className="px-6 py-3 text-left text-base font-bold text-black uppercase tracking-wider">Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody className="bg-white divide-y divide-slate-200">
+                            <tbody className="bg-zinc-400">
                                 {data.users.map((user: User) => (
-                                    <tr key={user.id} className="hover:bg-slate-50">
+                                    <tr key={user.id}>
                                         {editUserId === user.id ? (
                                             <>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-black">
                                                     <input
                                                         type="text"
                                                         value={editName}
                                                         onChange={(e) => setEditName(e.target.value)}
+                                                        className="bg-zinc-300 text-black"
                                                     />
                                                 </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">{user.email}</td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">{user.phone || 'N/A'}</td>
-                                                <td className="px-6 py-4 text-sm text-slate-900">
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-black">{user.email}</td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-black">{user.phone || 'N/A'}</td>
+                                                <td className="px-6 py-4 text-sm text-black">
                                                     <select
                                                         value={editRole}
                                                         onChange={(e) => setEditRole(e.target.value as 'ADMIN' | 'USER')}
+                                                        className="bg-zinc-300 text-black"
                                                     >
                                                         <option value="ADMIN">ADMIN</option>
                                                         <option value="USER">USER</option>
                                                     </select>
-                                                    <button onClick={() => handleSave(user.id)}>Save</button>
+                                                    <button onClick={() => handleSave(user.id)} className="ml-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Guardar</button>
                                                 </td>
                                             </>
                                         ) : (
                                             <>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">{user.name}</td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">{user.email}</td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">{user.phone || 'N/A'}</td>
-                                                <td className="px-6 py-4 text-sm text-slate-900">
-                                                    <button onClick={() => handleEdit(user)}>Edit</button>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-black">{user.name}</td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-black">{user.email}</td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-black">{user.phone || 'N/A'}</td>
+                                                <td className="px-6 py-4 text-sm text-black">
+                                                    <button onClick={() => handleEdit(user)} className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded">Editar</button>
                                                 </td>
                                             </>
                                         )}
@@ -123,7 +125,7 @@ export default function Users() {
                         </table>
                     </div>
                 ) : (
-                    <p className="text-slate-600">No users found.</p>
+                    <p className="text-slate-600">No se encontraron Usuarios.</p>
                 )}
             </div>
         </DashboardLayout>

@@ -14,7 +14,7 @@ export default function App({ Component, pageProps }: AppProps) {
         enableSystem={false}
         disableTransitionOnChange
       >
-        <div className="min-h-screen bg-white">
+        <div className="min-h-screen bg-zinc-200">
           <Component {...pageProps} />
           <Toaster richColors position="top-right" />
         </div>
