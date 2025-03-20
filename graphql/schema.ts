@@ -5,15 +5,15 @@ export const typeDefs = `#graphql
     id: Int!
     amount: Float!
     concept: String!
-    type: TypeTransaction!
+    type: TransactionType!
     date: DateTime!
     user: User!
     userId: Int!
   }
   
-  enum TypeTransaction {
-    INGRESO
-    EGRESO
+  enum TransactionType {
+    INCOME
+    EXPENSE
   }
 
   type User {
@@ -37,6 +37,6 @@ export const typeDefs = `#graphql
 
   type Mutation {
     updateUser(id: Int!, name: String, role: Role): User
-    createTransaction(amount: Float!, concept: String!, type: TypeTransaction!, date: DateTime!): Transaction!
+    createTransaction(amount: Float!, concept: String!, type: TransactionType!, date: DateTime!, userId: Int!): Transaction!
   }
 `;

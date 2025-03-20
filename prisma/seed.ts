@@ -4,7 +4,7 @@ const prisma = new PrismaClient()
 
 async function main() {
 
-    const alice = await prisma.user.upsert({
+    const daniel = await prisma.user.upsert({
         where: { email: 'daniel@gmail.com' },
         update: {},
         create: {
@@ -17,12 +17,12 @@ async function main() {
                     {
                         amount: 6000,
                         concept: 'Prueba Tecnica',
-                        type: 'INGRESO',
+                        type: 'INCOME',
                     },
                     {
                         amount: 1000,
                         concept: 'Compra de libros',
-                        type: 'EGRESO',
+                        type: 'EXPENSE',
                     },
                 ],
             },
@@ -42,12 +42,12 @@ async function main() {
                     {
                         amount: 5000,
                         concept: 'Venta de software',
-                        type: 'INGRESO',
+                        type: 'INCOME',
                     },
                     {
                         amount: 1000,
                         concept: 'Pago de internet',
-                        type: 'EGRESO',
+                        type: 'EXPENSE',
                     },
                 ],
             },

@@ -33,13 +33,13 @@ model Transaction {
   id      Int             @id @default(autoincrement())
   amount  Float
   concept String
-  type    TypeTransaction
+  type    TransactionType
   date    DateTime        @default(now())
   user    User            @relation(fields: [userId], references: [id])
   userId  Int
 }
 
-enum TypeTransaction {
-  INGRESO
-  EGRESO
+enum TransactionType {
+  INCOME
+  EXPENSE
 }
