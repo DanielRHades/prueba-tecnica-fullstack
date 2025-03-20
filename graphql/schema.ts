@@ -1,16 +1,42 @@
-// api/schema.ts
-import { makeSchema } from 'nexus'
-import { join } from 'path'
-import * as types from './types';
+export const typeDefs = `#graphql 
+  scalar DateTime
 
-export const schema = makeSchema({
-    types,
-    outputs: {
-        typegen: join(process.cwd(), 'node_modules', '@types', 'nexus-typegen', 'index.d.ts'),
-        schema: join(process.cwd(), 'graphql', 'schema.graphql'),
-    },
-    contextType: {
-        export: 'Context',
-        module: join(process.cwd(), 'graphql', 'context.ts')
-    },
-});
+  type Transaction {
+    id: Int!
+    amount: Float!
+    concept: String!
+    type: TypeTransaction!
+    date: DateTime!
+    user: User!
+    userId: Int!
+  }
+  
+  enum TypeTransaction {
+    INGRESO
+    EGRESO
+  }
+
+  type User {
+    id: Int!
+    name: String!
+    email: String!
+    phone: String
+    role: Role!
+    transactions: [Transaction!]
+  }
+
+  enum Role {
+    ADMIN
+    USER
+  }
+
+  type Query {
+    transactions: [Transaction!]!
+    users: [User!]!
+  }
+
+  type Mutation {
+    updateUser(id: Int!, name: String, role: Role): User
+    createTransaction(amount: Float!, concept: String!, type: TypeTransaction!, date: DateTime!): Transaction!
+  }
+`;

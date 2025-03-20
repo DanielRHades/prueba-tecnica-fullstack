@@ -1,11 +1,11 @@
-// pages/api/graphql.ts
 import { ApolloServer } from '@apollo/server';
 import { startServerAndCreateNextHandler } from '@as-integrations/next';
-import { schema } from '../../graphql/schema';
 import { Context } from '../../graphql/context';
 import { prisma } from '../../lib/prisma';
+import { typeDefs } from "@/graphql/schema";
+import { resolvers } from "@/graphql/resolvers";
 
-const apolloServer = new ApolloServer<Context>({ schema });
+const apolloServer = new ApolloServer<Context>({ typeDefs, resolvers });
 
 export default startServerAndCreateNextHandler(apolloServer, {
     context: async (req, res) => ({ req, res, prisma }),

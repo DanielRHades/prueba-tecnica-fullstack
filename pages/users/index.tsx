@@ -1,58 +1,91 @@
-import { gql, useQuery, useMutation } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 import { useState } from 'react';
 import DashboardLayout from '@/components/DashboardLayout';
+import { GET_USERS } from '@/graphql/queries';
+import { UPDATE_USER } from '@/graphql/mutations';
 
 interface User {
     id: number;
     name: string;
     email: string;
     phone: string | null;
+    role: 'ADMIN' | 'USER';
 }
 
-const AllUsersQuery = gql`
-  query Users {
-      users {
-          id
-          name
-          email
-          phone
-      }
-  }
-`;
+interface EditModalProps {
+    user: User | null;
+    onClose: () => void;
+    onSave: (id: number, name: string, role: 'ADMIN' | 'USER') => void;
+}
 
-const UPDATE_USER_MUTATION = gql`
-  mutation UpdateUser($id: Int!, $name: String, $role: Role) {
-      updateUser(id: $id, name: $name, role: $role) {
-          id
-          name
-          email
-          phone
-      }
-  }
-`;
+function EditModal({ user, onClose, onSave }: EditModalProps) {
+    const [name, setName] = useState(user?.name || '');
+    const [role, setRole] = useState<'ADMIN' | 'USER'>(user?.role || 'USER');
+
+    if (!user) return null;
+
+    return (
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50">
+            <div className="bg-zinc-400 p-6 rounded-lg shadow-xl w-96">
+                <h3 className="text-lg font-bold mb-4 text-black">Editar Usuario</h3>
+                <div className="mb-4">
+                    <label className="block text-sm font-medium text-black">Nombre</label>
+                    <input
+                        type="text"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm bg-zinc-300 text-black"
+                    />
+                </div>
+                <div className="mb-4">
+                    <label className="block text-sm font-medium text-black">Rol</label>
+                    <select
+                        value={role}
+                        onChange={(e) => setRole(e.target.value as 'ADMIN' | 'USER')}
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm bg-zinc-300 text-black"
+                    >
+                        <option value="USER">Usuario</option>
+                        <option value="ADMIN">Administrador</option>
+                    </select>
+                </div>
+                <div className="flex justify-end space-x-2">
+                    <button
+                        onClick={onClose}
+                        className="px-4 py-2 text-sm font-medium text-black bg-zinc-300 rounded-md hover:bg-zinc-500"
+                    >
+                        Cancelar
+                    </button>
+                    <button
+                        onClick={() => onSave(user.id, name, role)}
+                        className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
+                    >
+                        Guardar
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+}
 
 export default function Users() {
-    const { data, error, loading, refetch } = useQuery(AllUsersQuery);
-    const [updateUser] = useMutation(UPDATE_USER_MUTATION);
-    const [editUserId, setEditUserId] = useState<number | null>(null);
-    const [editName, setEditName] = useState<string>('');
-    const [editRole, setEditRole] = useState<'ADMIN' | 'USER' | ''>('');
+    const { data, error, loading, refetch } = useQuery(GET_USERS);
+    const [updateUser] = useMutation(UPDATE_USER);
+    const [editingUser, setEditingUser] = useState<User | null>(null);
 
     const handleEdit = (user: User) => {
-        setEditUserId(user.id);
-        setEditName(user.name);
+        setEditingUser(user);
     };
 
-    const handleSave = async (id: number) => {
+    const handleSave = async (id: number, name: string, role: 'ADMIN' | 'USER') => {
         try {
             await updateUser({
                 variables: {
-                    id: id,
-                    name: editName,
-                    role: editRole,
+                    id,
+                    name,
+                    role,
                 },
             });
-            setEditUserId(null);
+            setEditingUser(null);
             refetch();
         } catch (err) {
             console.error('Error updating user:', err);
@@ -85,40 +118,17 @@ export default function Users() {
                             <tbody className="bg-zinc-400">
                                 {data.users.map((user: User) => (
                                     <tr key={user.id}>
-                                        {editUserId === user.id ? (
-                                            <>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-black">
-                                                    <input
-                                                        type="text"
-                                                        value={editName}
-                                                        onChange={(e) => setEditName(e.target.value)}
-                                                        className="bg-zinc-300 text-black"
-                                                    />
-                                                </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-black">{user.email}</td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-black">{user.phone || 'N/A'}</td>
-                                                <td className="px-6 py-4 text-sm text-black">
-                                                    <select
-                                                        value={editRole}
-                                                        onChange={(e) => setEditRole(e.target.value as 'ADMIN' | 'USER')}
-                                                        className="bg-zinc-300 text-black"
-                                                    >
-                                                        <option value="ADMIN">ADMIN</option>
-                                                        <option value="USER">USER</option>
-                                                    </select>
-                                                    <button onClick={() => handleSave(user.id)} className="ml-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Guardar</button>
-                                                </td>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-black">{user.name}</td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-black">{user.email}</td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-black">{user.phone || 'N/A'}</td>
-                                                <td className="px-6 py-4 text-sm text-black">
-                                                    <button onClick={() => handleEdit(user)} className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded">Editar</button>
-                                                </td>
-                                            </>
-                                        )}
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-black">{user.name}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-black">{user.email}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-black">{user.phone || 'N/A'}</td>
+                                        <td className="px-6 py-4 text-sm text-black">
+                                            <button 
+                                                onClick={() => handleEdit(user)} 
+                                                className="bg-zinc-300 hover:bg-zinc-500 text-black font-bold py-2 px-4 rounded"
+                                            >
+                                                Editar
+                                            </button>
+                                        </td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -128,6 +138,14 @@ export default function Users() {
                     <p className="text-slate-600">No se encontraron Usuarios.</p>
                 )}
             </div>
+
+            {editingUser && (
+                <EditModal
+                    user={editingUser}
+                    onClose={() => setEditingUser(null)}
+                    onSave={handleSave}
+                />
+            )}
         </DashboardLayout>
     );
 }
