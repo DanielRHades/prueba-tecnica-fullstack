@@ -101,7 +101,7 @@ export default function Users() {
     if (error) return <p className="text-red-500">Oops, algo salio mal: {error.message}</p>;
 
     return (
-        <DashboardLayout pageTitle="Sistema de gestión de Ingresos y Gastos">
+        <DashboardLayout pageTitle="Sistema de gestión de Ingresos y Gastos" currentPathname="/users">
             <div className="p-4 max-w-7xl mx-auto">
                 <h2 className="text-2xl underline font-bold mb-6 mt-8 text-black">Gestión de Usuarios</h2>
                 {data && data.users && data.users.length > 0 ? (

@@ -80,7 +80,7 @@ export default function Reports() {
             Math.abs(chartData[chartData.length - 2].amount) * 100).toFixed(1) : 0;
 
     return (
-        <DashboardLayout pageTitle="Sistema de gestión de Ingresos y Gastos">
+        <DashboardLayout pageTitle="Sistema de gestión de Ingresos y Gastos" currentPathname="/reports">
             <div className="p-4 max-w-7xl mx-auto">
                 <div className="flex justify-between items-center mb-6">
                     <h2 className="text-2xl underline font-bold text-black">Reportes Financieros</h2>

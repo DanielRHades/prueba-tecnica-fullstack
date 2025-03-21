@@ -194,7 +194,7 @@ export default function Transactions() {
     const total = transactionsData?.transactions ? calculateTotal(transactionsData.transactions) : 0;
 
     return (
-        <DashboardLayout pageTitle="Sistema de gestión de Ingresos y Gastos">
+        <DashboardLayout pageTitle="Sistema de gestión de Ingresos y Gastos" currentPathname="/transactions">
             <div className="p-4 max-w-7xl mx-auto">
                 <div className="flex justify-between items-center mb-6 mt-8">
                     <h2 className="text-2xl underline font-bold text-black">Gestión de Transacciones</h2>

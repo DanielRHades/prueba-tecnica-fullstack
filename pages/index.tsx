@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export default function Dashboard() {
   return (
-    <DashboardLayout pageTitle="Sistema de gestión de Ingresos y Egresos">
+    <DashboardLayout pageTitle="Sistema de gestión de Ingresos y Egresos" currentPathname="/">
       <div className="p-4">
         <h2 className="text-black font-bold mb-6 mt-16 text-2xl pl-12">Bienvenido al Inicio. Nuestros servicios:</h2>
 
