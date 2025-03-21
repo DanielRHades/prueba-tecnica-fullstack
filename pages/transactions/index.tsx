@@ -3,6 +3,7 @@ import { useState } from 'react';
 import DashboardLayout from '@/components/DashboardLayout';
 import { GET_TRANSACTIONS, GET_USERS } from '@/graphql/queries';
 import { CREATE_TRANSACTION } from '@/graphql/mutations';
+import withAuth from '@/components/withAuth';
 
 interface Transaction {
     id: string;
@@ -152,7 +153,7 @@ function CreateModal({ onClose, onSave, users }: CreateModalProps) {
     );
 }
 
-export default function Transactions() {
+function Transactions() {
     const { data: transactionsData, error: transactionsError, loading: transactionsLoading, refetch: refetchTransactions } = useQuery(GET_TRANSACTIONS);
     const { data: usersData, error: usersError, loading: usersLoading } = useQuery(GET_USERS);
     const [createTransaction] = useMutation(CREATE_TRANSACTION);
@@ -260,3 +261,5 @@ export default function Transactions() {
         </DashboardLayout>
     );
 }
+
+export default withAuth(Transactions);

@@ -1,7 +1,8 @@
 import DashboardLayout from '@/components/DashboardLayout';
 import Link from 'next/link';
+import withAuth from '@/components/withAuth';
 
-export default function Dashboard() {
+function Dashboard() {
   return (
     <DashboardLayout pageTitle="Sistema de gestión de Ingresos y Egresos" currentPathname="/">
       <div className="p-4">
@@ -31,3 +32,5 @@ export default function Dashboard() {
     </DashboardLayout>
   );
 }
+
+export default withAuth(Dashboard);

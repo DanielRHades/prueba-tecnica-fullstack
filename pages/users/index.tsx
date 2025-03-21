@@ -3,6 +3,7 @@ import { useState } from 'react';
 import DashboardLayout from '@/components/DashboardLayout';
 import { GET_USERS } from '@/graphql/queries';
 import { UPDATE_USER } from '@/graphql/mutations';
+import withAuth from '@/components/withAuth';
 
 interface User {
     id: string;
@@ -67,7 +68,7 @@ function EditModal({ user, onClose, onSave }: EditModalProps) {
     );
 }
 
-export default function Users() {
+function Users() {
     const { data, error, loading, refetch } = useQuery(GET_USERS);
     const [updateUser] = useMutation(UPDATE_USER);
     const [editingUser, setEditingUser] = useState<User | null>(null);
@@ -149,3 +150,5 @@ export default function Users() {
         </DashboardLayout>
     );
 }
+
+export default withAuth(Users);
