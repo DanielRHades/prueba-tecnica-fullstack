@@ -1,5 +1,6 @@
 import { gql } from "@apollo/client";
 
+{/*Mutación encargada de Actualizar unicamente el Nombre (name) y Rol (role) del Usuario.*/ }
 export const UPDATE_USER = gql`
 	mutation UpdateUser($id: String!, $name: String, $role: Role) {
 		updateUser(id: $id, name: $name, role: $role) {

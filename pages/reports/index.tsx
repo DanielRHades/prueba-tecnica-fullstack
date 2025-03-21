@@ -30,12 +30,15 @@ function processTransactionsForChart(transactions: Transaction[]) {
     }));
 }
 
+{/*Función encargada de calcular el total de las transacciones sumando el valor si es un ingreso (Income)
+    o restandolo si es un gasto (Expense).*/}
 function calculateTotal(transactions: Transaction[]) {
     return transactions.reduce((total, transaction) => {
         return total + (transaction.type === 'INCOME' ? transaction.amount : -transaction.amount);
     }, 0);
 }
 
+{/*Función encargada de la generación del CSV con las transacciones.*/ }
 function downloadCSV(transactions: Transaction[]) {
     const headers = ['Fecha', 'Concepto', 'Tipo', 'Monto', 'Usuario'];
     const csvData = transactions.map(t => [
@@ -95,7 +98,7 @@ export default function Reports() {
 
                 <div className="grid grid-cols-1 gap-6">
 
-                    {/* Gráfico de Barras */}
+                    {/* Gráfico de Barras encargado de desplegar la información por Meses.*/}
                     <div className="bg-zinc-400 p-6 rounded-lg shadow-lg">
                         <div className="mb-4">
                             <h3 className="text-lg font-bold text-black">Movimientos Financieros</h3>
@@ -135,7 +138,7 @@ export default function Reports() {
                         </div>
                     </div>
 
-                    {/* Saldo Actual */}
+                    {/* Saldo Actual de las Transacciones*/}
                     <div className="bg-zinc-400 p-6 rounded-lg shadow-lg">
                         <h3 className="text-lg font-bold text-black mb-4">Saldo Actual</h3>
                         <p className="text-3xl font-bold text-black">

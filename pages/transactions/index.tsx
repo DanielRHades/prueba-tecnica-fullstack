@@ -37,8 +37,9 @@ function CreateModal({ onClose, onSave, users }: CreateModalProps) {
     const [userId, setUserId] = useState<string>(users[0]?.id || '');
     const [error, setError] = useState<string>('');
 
+    {/*Validacion de los datos suministrados en el Modal*/ }
     const handleSubmit = () => {
-        // Validaciones
+
         if (!amount || parseFloat(amount) <= 0) {
             setError('El monto debe ser mayor a 0');
             return;
@@ -176,6 +177,8 @@ export default function Transactions() {
         }
     };
 
+    {/*Función encargada de calcular el total de las transacciones sumando el valor si es un ingreso (Income)
+    o restandolo si es un gasto (Expense).*/}
     const calculateTotal = (transactions: Transaction[]) => {
         return transactions.reduce((total, transaction) => {
             return total + (transaction.type === TransactionType.INCOME ? transaction.amount : -transaction.amount);

@@ -3,7 +3,7 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 async function main() {
-
+    {/*Datos de Prueba*/ }
     const daniel = await prisma.user.upsert({
         where: { email: 'daniel@gmail.com' },
         update: {},

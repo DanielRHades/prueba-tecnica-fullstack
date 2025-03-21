@@ -18,6 +18,7 @@ interface EditModalProps {
     onSave: (id: string, name: string, role: 'ADMIN' | 'USER') => void;
 }
 
+{/*Modal encargado de Actualizar el Nombre (name) y Rol (role) del Usuario*/ }
 function EditModal({ user, onClose, onSave }: EditModalProps) {
     const [name, setName] = useState(user?.name || '');
     const [role, setRole] = useState<'ADMIN' | 'USER'>(user?.role || 'USER');
