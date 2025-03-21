@@ -5,7 +5,7 @@ import { GET_USERS } from '@/graphql/queries';
 import { UPDATE_USER } from '@/graphql/mutations';
 
 interface User {
-    id: number;
+    id: string;
     name: string;
     email: string;
     phone: string | null;
@@ -15,7 +15,7 @@ interface User {
 interface EditModalProps {
     user: User | null;
     onClose: () => void;
-    onSave: (id: number, name: string, role: 'ADMIN' | 'USER') => void;
+    onSave: (id: string, name: string, role: 'ADMIN' | 'USER') => void;
 }
 
 function EditModal({ user, onClose, onSave }: EditModalProps) {
@@ -76,7 +76,7 @@ export default function Users() {
         setEditingUser(user);
     };
 
-    const handleSave = async (id: number, name: string, role: 'ADMIN' | 'USER') => {
+    const handleSave = async (id: string, name: string, role: 'ADMIN' | 'USER') => {
         try {
             await updateUser({
                 variables: {
@@ -122,8 +122,8 @@ export default function Users() {
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-black">{user.email}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-black">{user.phone || 'N/A'}</td>
                                         <td className="px-6 py-4 text-sm text-black">
-                                            <button 
-                                                onClick={() => handleEdit(user)} 
+                                            <button
+                                                onClick={() => handleEdit(user)}
                                                 className="bg-zinc-300 hover:bg-zinc-500 text-black font-bold py-2 px-4 rounded"
                                             >
                                                 Editar

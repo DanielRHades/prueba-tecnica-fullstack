@@ -5,16 +5,16 @@ import { GET_TRANSACTIONS, GET_USERS } from '@/graphql/queries';
 import { CREATE_TRANSACTION } from '@/graphql/mutations';
 
 interface Transaction {
-    id: number;
+    id: string;
     amount: number;
     concept: string;
     type: TransactionType;
     date: string;
-    userId: number;
+    userId: string;
 }
 
 interface User {
-    id: number;
+    id: string;
     name: string;
 }
 
@@ -25,7 +25,7 @@ enum TransactionType {
 
 interface CreateModalProps {
     onClose: () => void;
-    onSave: (amount: number, concept: string, type: TransactionType, date: string, userId: number) => void;
+    onSave: (amount: number, concept: string, type: TransactionType, date: string, userId: string) => void;
     users: User[];
 }
 
@@ -34,7 +34,7 @@ function CreateModal({ onClose, onSave, users }: CreateModalProps) {
     const [concept, setConcept] = useState<string>('');
     const [type, setType] = useState<TransactionType>(TransactionType.INCOME);
     const [date, setDate] = useState<string>(new Date().toISOString().split('T')[0]);
-    const [userId, setUserId] = useState<number>(users[0]?.id || 0);
+    const [userId, setUserId] = useState<string>(users[0]?.id || '');
     const [error, setError] = useState<string>('');
 
     const handleSubmit = () => {
@@ -64,7 +64,7 @@ function CreateModal({ onClose, onSave, users }: CreateModalProps) {
         setConcept('');
         setType(TransactionType.INCOME);
         setDate(new Date().toISOString().split('T')[0]);
-        setUserId(users[0]?.id || 0);
+        setUserId(users[0]?.id || '');
         setError('');
     };
 
@@ -123,7 +123,7 @@ function CreateModal({ onClose, onSave, users }: CreateModalProps) {
                     <label className="block text-sm font-medium text-black">Usuario</label>
                     <select
                         value={userId}
-                        onChange={(e) => setUserId(Number(e.target.value))}
+                        onChange={(e) => setUserId(String(e.target.value))}
                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm bg-zinc-300 text-black"
                     >
                         {users.map((user) => (
@@ -158,7 +158,7 @@ export default function Transactions() {
     const [createTransaction] = useMutation(CREATE_TRANSACTION);
     const [showCreateModal, setShowCreateModal] = useState(false);
 
-    const handleCreate = async (amount: number, concept: string, type: TransactionType, date: string, userId: number) => {
+    const handleCreate = async (amount: number, concept: string, type: TransactionType, date: string, userId: string) => {
         try {
             await createTransaction({
                 variables: {

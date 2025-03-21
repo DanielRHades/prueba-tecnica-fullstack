@@ -5,21 +5,21 @@ import DashboardLayout from '@/components/DashboardLayout';
 import { GET_TRANSACTIONS } from '@/graphql/queries';
 
 interface Transaction {
-    id: number;
+    id: string;
     amount: number;
     concept: string;
     type: 'INCOME' | 'EXPENSE';
     date: string;
-    userId: number;
+    userId: string;
 }
 
 function processTransactionsForChart(transactions: Transaction[]) {
-    
+
     const monthlyData = transactions.reduce((acc: { [key: string]: number }, transaction) => {
         const date = new Date(transaction.date);
         const monthYear = `${date.toLocaleString('default', { month: 'long' })} ${date.getFullYear()}`;
         const amount = transaction.type === 'INCOME' ? transaction.amount : -transaction.amount;
-        
+
         acc[monthYear] = (acc[monthYear] || 0) + amount;
         return acc;
     }, {});
@@ -75,9 +75,9 @@ export default function Reports() {
 
     const chartData = processTransactionsForChart(data?.transactions || []);
     const total = calculateTotal(data?.transactions || []);
-    const monthlyChange = chartData.length >= 2 ? 
-        ((chartData[chartData.length - 1].amount - chartData[chartData.length - 2].amount) / 
-        Math.abs(chartData[chartData.length - 2].amount) * 100).toFixed(1) : 0;
+    const monthlyChange = chartData.length >= 2 ?
+        ((chartData[chartData.length - 1].amount - chartData[chartData.length - 2].amount) /
+            Math.abs(chartData[chartData.length - 2].amount) * 100).toFixed(1) : 0;
 
     return (
         <DashboardLayout pageTitle="Sistema de gestión de Ingresos y Gastos">
@@ -94,6 +94,7 @@ export default function Reports() {
                 </div>
 
                 <div className="grid grid-cols-1 gap-6">
+
                     {/* Gráfico de Barras */}
                     <div className="bg-zinc-400 p-6 rounded-lg shadow-lg">
                         <div className="mb-4">
@@ -110,7 +111,7 @@ export default function Reports() {
                                     <Bar dataKey="amount">
                                         <LabelList dataKey="month" position="top" />
                                         {chartData.map((entry, index) => (
-                                            <Cell 
+                                            <Cell
                                                 key={`cell-${index}`}
                                                 fill={entry.amount >= 0 ? '#4ade80' : '#f87171'}
                                             />

@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const UPDATE_USER = gql`
-	mutation UpdateUser($id: Int!, $name: String, $role: Role) {
+	mutation UpdateUser($id: String!, $name: String, $role: Role) {
 		updateUser(id: $id, name: $name, role: $role) {
 			id
 			name
@@ -11,7 +11,7 @@ export const UPDATE_USER = gql`
 `;
 
 export const CREATE_TRANSACTION = gql`
-	mutation CreateTransaction($amount: Float!, $concept: String!, $type: TransactionType!, $date: DateTime!, $userId: Int!) {
+	mutation CreateTransaction($amount: Float!, $concept: String!, $type: TransactionType!, $date: DateTime!, $userId: String!) {
 		createTransaction(amount: $amount, concept: $concept, type: $type, date: $date, userId: $userId) {
 			id
 			amount

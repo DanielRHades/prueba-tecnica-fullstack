@@ -2,13 +2,13 @@ export const typeDefs = `#graphql
   scalar DateTime
 
   type Transaction {
-    id: Int!
+    id: String!
     amount: Float!
     concept: String!
     type: TransactionType!
     date: DateTime!
     user: User!
-    userId: Int!
+    userId: String!
   }
   
   enum TransactionType {
@@ -17,7 +17,7 @@ export const typeDefs = `#graphql
   }
 
   type User {
-    id: Int!
+    id: String!
     name: String!
     email: String!
     phone: String
@@ -36,7 +36,7 @@ export const typeDefs = `#graphql
   }
 
   type Mutation {
-    updateUser(id: Int!, name: String, role: Role): User
-    createTransaction(amount: Float!, concept: String!, type: TransactionType!, date: DateTime!, userId: Int!): Transaction!
+    updateUser(id: String!, name: String, role: Role): User
+    createTransaction(amount: Float!, concept: String!, type: TransactionType!, date: DateTime!, userId: String!): Transaction!
   }
 `;
